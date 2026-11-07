@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Моя книжная полка{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header__inner">
+            <a class="brand" href="{% url 'books:book_list' %}">
+                <svg class="brand__icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H11v18H6.5A1.5 1.5 0 0 1 5 19.5v-15Z" fill="currentColor" opacity=".95"/>
+                    <path d="M13 3h4.5A1.5 1.5 0 0 1 19 4.5v15a1.5 1.5 0 0 1-1.5 1.5H13V3Z" fill="currentColor" opacity=".55"/>
+                    <path d="M11 6h1.2v12H11z" fill="#f6f1e7"/>
+                </svg>
+                <span>Моя книжная полка</span>
+            </a>
+
+            <nav class="nav" aria-label="Основная навигация">
+                <a class="nav__link {% if request.resolver_match.url_name == 'book_list' %}is-active{% endif %}"
+                   href="{% url 'books:book_list' %}">Все книги</a>
+                <a class="nav__link nav__link--accent {% if request.resolver_match.url_name == 'book_create' %}is-active{% endif %}"
+                   href="{% url 'books:book_create' %}">Добавить книгу</a>
+            </nav>
+        </div>
+    </header>
+
+    {% if messages %}
+        <div class="container messages">
+            {% for message in messages %}
+                <div class="message message--{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="container main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer__inner">
+            <span>Учебный проект на Django</span>
+            <span>Моя книжная полка · 2026</span>
+        </div>
+    </footer>
+</body>
+</html>

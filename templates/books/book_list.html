@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Моя книжная полка{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero__content">
+        <p class="eyebrow">Личная библиотека</p>
+        <h1>Моя книжная полка</h1>
+        <p class="hero__text">
+            Собирайте книги, которые хотите прочитать, отмечайте прочитанные
+            и возвращайтесь к любимым историям в любой момент.
+        </p>
+        <a class="button button--primary" href="{% url 'books:book_create' %}">Добавить книгу</a>
+    </div>
+
+    <div class="stats" aria-label="Статистика библиотеки">
+        <div class="stat">
+            <span class="stat__value">{{ total_books }}</span>
+            <span class="stat__label">всего книг</span>
+        </div>
+        <div class="stat stat--read">
+            <span class="stat__value">{{ read_books }}</span>
+            <span class="stat__label">прочитано</span>
+        </div>
+        <div class="stat stat--unread">
+            <span class="stat__value">{{ unread_books }}</span>
+            <span class="stat__label">в планах</span>
+        </div>
+    </div>
+</section>
+
+{% if books %}
+    <section class="books">
+        <div class="books__head">
+            <h2>Каталог книг</h2>
+            <span class="books__count">Всего: {{ total_books }}</span>
+        </div>
+
+        <div class="book-grid">
+            {% for book in books %}
+                <article class="book-card {% if book.is_read %}book-card--read{% else %}book-card--unread{% endif %}">
+                    <div class="book-card__head">
+                        <span class="status {% if book.is_read %}status--read{% else %}status--unread{% endif %}">
+                            {% if book.is_read %}Прочитана{% else %}Ещё не прочитана{% endif %}
+                        </span>
+                        <span class="book-card__index">{{ forloop.counter|stringformat:"02d" }}</span>
+                    </div>
+
+                    <h3 class="book-card__title">{{ book.title }}</h3>
+                    <p class="book-card__author">{{ book.author }}</p>
+                    <p class="book-card__description">{{ book.description }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+{% else %}
+    <section class="empty-state">
+        <svg class="empty-state__icon" viewBox="0 0 120 100" aria-hidden="true">
+            <rect x="18" y="24" width="18" height="58" rx="3" fill="#2f7d5b"/>
+            <rect x="40" y="16" width="20" height="66" rx="3" fill="#c8842a"/>
+            <rect x="64" y="30" width="16" height="52" rx="3" fill="#1f4d3a"/>
+            <rect x="84" y="22" width="18" height="60" rx="3" fill="#e0b46e"/>
+            <path d="M12 84h96" stroke="#cbbfa9" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <h2>Вы пока не добавили ни одной книги</h2>
+        <p>Начните собирать свою библиотеку — добавьте первую книгу.</p>
+        <a class="button button--primary" href="{% url 'books:book_create' %}">Добавить книгу</a>
+    </section>
+{% endif %}
+{% endblock %}
